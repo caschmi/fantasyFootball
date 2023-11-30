@@ -22,9 +22,6 @@ fantasy = fantasy %>% mutate(Division = case_when(Tm %in% c("MIA", "BUF", "NYJ",
 
 detach(fantasy)
 
-<<<<<<< HEAD
-write.csv(fantasy, "fantasyFootball.csv")
+#write.csv(fantasy, "fantasyFootball.csv")
 
-=======
 # write.csv(fantasy, "fantasyFootball.csv")
->>>>>>> a0aced8377434aff8a36f0a0547c23628d0e7304
