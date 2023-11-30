@@ -8,7 +8,7 @@ fantasy$Performance = 0.1*(RushYds+RecYds) + 6*(RushTD+RecTD) - 2*FL + 0.04*Yds 
 
 fantasy$Age.Centered = Age - min(Age)
 
-fantasy$AgeKnot.Centered = (Age.Centered > 7) * (Age.Centered - 7)
+fantasy$AgeKnot.Centered = (fantasy$Age.Centered > 7) * (fantasy$Age.Centered - 7)
 
 fantasy = fantasy %>% mutate(Division = case_when(Tm %in% c("MIA", "BUF", "NYJ", "NWE") ~ "AFC East",
                                                    Tm %in% c("BAL", "PIT", "CLE", "CIN") ~ "AFC North",
