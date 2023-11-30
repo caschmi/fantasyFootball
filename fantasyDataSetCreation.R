@@ -4,9 +4,11 @@ fantasy = read.csv("fantasy_merged_7_17.csv")
 
 ### Creating outcome variable with performance point calculation
 attach(fantasy)
-fantasy$Performance <- 0.1*(RushYds+RecYds) + 6*(RushTD+RecTD) - 2*FL + 0.04*Yds + 4*TD - 2*Int
+fantasy$Performance = 0.1*(RushYds+RecYds) + 6*(RushTD+RecTD) - 2*FL + 0.04*Yds + 4*TD - 2*Int
 
-fantasy$AgeKnot = (Age > 28) * (Age - 28)
+fantasy$Age.Centered = Age - min(Age)
+
+fantasy$AgeKnot.Centered = (Age.Centered > 7) * (Age.Centered - 7)
 
 fantasy = fantasy %>% mutate(Division = case_when(Tm %in% c("MIA", "BUF", "NYJ", "NWE") ~ "AFC East",
                                                    Tm %in% c("BAL", "PIT", "CLE", "CIN") ~ "AFC North",
@@ -22,9 +24,5 @@ fantasy = fantasy %>% mutate(Division = case_when(Tm %in% c("MIA", "BUF", "NYJ",
 
 detach(fantasy)
 
-<<<<<<< HEAD
-write.csv(fantasy, "fantasyFootball.csv")
-
-=======
 # write.csv(fantasy, "fantasyFootball.csv")
->>>>>>> a0aced8377434aff8a36f0a0547c23628d0e7304
+

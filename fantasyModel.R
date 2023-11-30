@@ -23,8 +23,9 @@ fantasy_28 = fantasy %>% filter(maxAge > 28) %>% filter(minAge < 28)
 
 fantasy_28 = fantasy_28 %>% ungroup()
 
-modelFantasy28 = modelFantasy = lme(Performance ~ Age + AgeKnot + Rk + FantPos + Division, 
-                                    data = fantasy, 
-                                    random = ~1 + Age + AgeKnot | PlayerID)
+# modelFantasy28 = modelFantasy = lme(Performance ~ Age + AgeKnot + Rk + FantPos + Division, 
+                                    # data = fantasy, 
+                                    # random = ~1 + Age + AgeKnot | PlayerID)
 hist(fantasy$Performance)
-hist(log(fantasy$Performance + 5))
+hist(log(fantasy$Performance + 5.3))
+hist(fantasy$Age)
