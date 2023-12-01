@@ -11,7 +11,10 @@ ggplot(fantasy, aes(y = Performance, x = Age, group = FantPos)) +
   theme_bw() + 
   ggtitle("LOESS Smoothed Curve for Fantasy Football Performance")
 
-
+ggplot(fantasy, aes(y = logPerformance, x = Age, group = FantPos)) + 
+  geom_smooth(aes(color = FantPos), method = 'loess') +
+  theme_bw() + 
+  ggtitle("LOESS Smoothed Curve for Fantasy Football Performance")
 
 ### Creating sample of 20 players ###
 set.seed(11032023)
