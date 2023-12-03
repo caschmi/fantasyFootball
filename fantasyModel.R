@@ -7,33 +7,16 @@ fantasy$occassion = fantasy$Year - 2016
 
 fantasy$Agesquared <- (fantasy$Age)^2
 fantasy$AgeKnotsquared <- (fantasy$AgeKnot.Centered)^2
-fantasy$logPerformance <- log(fantasy$Performance + 5.3)
 
-#models for first scientific question: ----
-#Does the trajectory of a player’s performance change after age 28?
 
-#first analysis: all players, unadjusted model
-model1 <- lme(logPerformance ~ Age.Centered + Agesquared + AgeKnot.Centered + AgeKnotsquared,
-              data = fantasy,
-              random = ~1 + Age.Centered | PlayerID)
-summary(model1)
-
-#model without squared terms
-model2 <- lme(logPerformance ~ Age.Centered + AgeKnot.Centered,
-              data = fantasy,
-              random = ~1 + Age.Centered | PlayerID)
-summary(model2)
-
-#second analysis: all players, adjusted model
 #change correlation structure -- need to change data frame to include "occasion"
-modelFantasy = lme(logPerformance ~ Age.Centered + Agesquared + AgeKnot.Centered + AgeKnotsquared + Rk + FantPos + Division + Age.Centered*FantPos + AgeKnot.Centered*FantPos, 
+modelFantasy = lme(log(Performance + 5.3) ~ Age.Centered + Agesquared + AgeKnot.Centered + AgeKnotsquared + Rk + FantPos + Division + Age.Centered*FantPos + AgeKnot.Centered*FantPos, 
                     data = fantasy, 
-                    random = ~1 + Age.Centered | PlayerID) 
+                    random = ~1 + Age | PlayerID) 
 
 <<<<<<< HEAD
 =======
 summary(modelFantasy)
-anova(modelFantasy)
 
 >>>>>>> fe31c9189ac5dfd278212c1f97d89a060be10abf
 
@@ -52,18 +35,3 @@ fantasy_28 = fantasy_28 %>% ungroup()
 hist(fantasy$Performance)
 hist(log(fantasy$Performance + 5.3))
 hist(fantasy$Age)
-
-#models for second scientific question: ----
-#Does the performance of running back’s decline after age 28?
-
-#filter data to only include running backs
-fantasy_rb <- fantasy %>% filter(FantPos == "RB")
-
-#first model: only running backs, unadjusted
-model1 <- lme(logPerformance ~ Age.Centered + Agesquared + AgeKnot.Centered + AgeKnotsquared,
-              data = fantasy,
-              random = ~1 + Age | PlayerID)
-summary(model1)
-
-
-
