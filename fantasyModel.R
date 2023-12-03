@@ -24,18 +24,27 @@ model2 <- lme(logPerformance ~ Age.Centered + AgeKnot.Centered,
               random = ~1 + Age.Centered | PlayerID)
 summary(model2)
 
+anova(model1, model2)
+
 #second analysis: all players, adjusted model
 #change correlation structure -- need to change data frame to include "occasion"
-modelFantasy = lme(logPerformance ~ Age.Centered + Agesquared + AgeKnot.Centered + AgeKnotsquared + Rk + FantPos + Division + Age.Centered*FantPos + AgeKnot.Centered*FantPos, 
+modelFantasy1 = lme(logPerformance ~ Age.Centered + Agesquared + AgeKnot.Centered + AgeKnotsquared + Rk + FantPos + Division + Age.Centered*FantPos + AgeKnot.Centered*FantPos, 
                     data = fantasy, 
                     random = ~1 + Age.Centered | PlayerID) 
 
-<<<<<<< HEAD
-=======
+#final model without squared terms
+modelFantasy = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk + FantPos + Division + Age.Centered*FantPos + AgeKnot.Centered*FantPos, 
+                   data = fantasy, 
+                   random = ~1 + Age.Centered | PlayerID) 
+
+anova(modelFantasy1, modelFantasy)
+
+
+
+
 summary(modelFantasy)
 anova(modelFantasy)
 
->>>>>>> fe31c9189ac5dfd278212c1f97d89a060be10abf
 
 # Data set creation of only individuals who have ages before and after 28
 
