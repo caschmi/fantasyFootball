@@ -15,13 +15,15 @@ fantasy$logPerformance <- log(fantasy$Performance + 5.3)
 #first analysis: all players, unadjusted model
 model1 <- lme(logPerformance ~ Age.Centered + Agesquared + AgeKnot.Centered + AgeKnotsquared,
               data = fantasy,
-              random = ~1 + Age.Centered | PlayerID)
+              random = ~1 + Age.Centered | PlayerID,
+              method = "ML")
 summary(model1)
 
 #model without squared terms
 model2 <- lme(logPerformance ~ Age.Centered + AgeKnot.Centered,
               data = fantasy,
-              random = ~1 + Age.Centered | PlayerID)
+              random = ~1 + Age.Centered | PlayerID,
+              method = "ML")
 summary(model2)
 
 anova(model1, model2)
@@ -30,12 +32,14 @@ anova(model1, model2)
 #change correlation structure -- need to change data frame to include "occasion"
 modelFantasy1 = lme(logPerformance ~ Age.Centered + Agesquared + AgeKnot.Centered + AgeKnotsquared + Rk + FantPos + Division + Age.Centered*FantPos + AgeKnot.Centered*FantPos, 
                     data = fantasy, 
-                    random = ~1 + Age.Centered | PlayerID) 
+                    random = ~1 + Age.Centered | PlayerID,
+                    method = "ML") 
 
 #final model without squared terms
 modelFantasy = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk + FantPos + Division + Age.Centered*FantPos + AgeKnot.Centered*FantPos, 
                    data = fantasy, 
-                   random = ~1 + Age.Centered | PlayerID) 
+                   random = ~1 + Age.Centered | PlayerID,
+                   method = "ML") 
 
 summary(modelFantasy)
 
