@@ -14,8 +14,6 @@ modelFantasy = lme(log(Performance + 5.3) ~ Age.Centered + Agesquared + AgeKnot.
                     data = fantasy, 
                     random = ~1 + Age | PlayerID) 
 
-summary(modelFantasy)
-
 
 # Data set creation of only individuals who have ages before and after 28
 
