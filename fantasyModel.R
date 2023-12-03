@@ -5,7 +5,7 @@ fantasy = read.csv("fantasyFootball.csv")
 
 fantasy$occassion = fantasy$Year - 2016
 
-fantasy$Agesquared <- (fantasy$Age)^2
+fantasy$Agesquared <- (fantasy$Age.Centered)^2
 fantasy$AgeKnotsquared <- (fantasy$AgeKnot.Centered)^2
 fantasy$logPerformance <- log(fantasy$Performance + 5.3)
 
