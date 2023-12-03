@@ -37,6 +37,8 @@ modelFantasy = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk + FantP
                    data = fantasy, 
                    random = ~1 + Age.Centered | PlayerID) 
 
+summary(modelFantasy)
+
 anova(modelFantasy1, modelFantasy)
 
 
@@ -69,10 +71,36 @@ hist(fantasy$Age)
 fantasy_rb <- fantasy %>% filter(FantPos == "RB")
 
 #first model: only running backs, unadjusted
-model1 <- lme(logPerformance ~ Age.Centered + Agesquared + AgeKnot.Centered + AgeKnotsquared,
-              data = fantasy,
+model1_rb <- lme(logPerformance ~ Age.Centered + Agesquared + AgeKnot.Centered + AgeKnotsquared,
+              data = fantasy_rb,
               random = ~1 + Age | PlayerID)
-summary(model1)
+summary(model1_rb)
+
+
+#model without squared terms
+model2_rb <- lme(logPerformance ~ Age.Centered + AgeKnot.Centered,
+              data = fantasy_rb,
+              random = ~1 + Age.Centered | PlayerID)
+summary(model2_rb)
+
+anova(model1_rb, model2_rb)
+#squared terms are not significant 
+
+#second analysis: only running backs, adjusted model
+#change correlation structure -- need to change data frame to include "occasion"
+modelFantasy1_rb = lme(logPerformance ~ Age.Centered + Agesquared + AgeKnot.Centered + AgeKnotsquared + Rk + Division, 
+                    data = fantasy_rb, 
+                    random = ~1 + Age.Centered | PlayerID) 
+
+#final model without squared terms
+modelFantasy_rb = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk + Division, 
+                   data = fantasy_rb, 
+                   random = ~1 + Age.Centered | PlayerID) 
+
+anova(modelFantasy1_rb, modelFantasy_rb)
+anova(modelFantasy_rb)
+
+
 
 
 
