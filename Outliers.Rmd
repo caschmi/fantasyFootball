@@ -1,0 +1,125 @@
+
+
+Creating data set with no outliers:
+```{r}
+#install.packages("univOutl")
+library(univOutl)
+fantasy = read.csv("fantasyFootball.csv")
+fantasy_nooutl <- fantasy[-boxB(fantasy$Performance)$outliers,]
+fantasy_nooutl$occassion = fantasy_nooutl$Year - 2016
+fantasy_nooutl$Agesquared <- (fantasy_nooutl$Age)^2
+fantasy_nooutl$AgeKnotsquared <- (fantasy_nooutl$AgeKnot.Centered)^2
+fantasy_nooutl$logPerformance <- log(fantasy_nooutl$Performance + 5.3)
+```
+
+Running same models as before but on new data:
+
+First analysis, all players, no outliers
+
+```{r}
+model1_nooutl <- lme(logPerformance ~ Age.Centered + Agesquared + AgeKnot.Centered + AgeKnotsquared,
+              data = fantasy_nooutl,
+              random = ~1 + Age.Centered | PlayerID)
+summary(model1_nooutl)
+```
+
+Model without squared terms:
+
+```{r}
+model2_nooutl <- lme(logPerformance ~ Age.Centered + AgeKnot.Centered,
+              data = fantasy_nooutl,
+              random = ~1 + Age.Centered | PlayerID)
+summary(model2_nooutl)
+anova(model1_nooutl, model2_nooutl)
+```
+
+Second analysis, all players, no outliers, adjusted model
+
+```{r}
+modelFantasy1_nooutl = lme(logPerformance ~ Age.Centered + Agesquared + AgeKnot.Centered + AgeKnotsquared + Rk + FantPos + Division + Age.Centered*FantPos + AgeKnot.Centered*FantPos, 
+                    data = fantasy_nooutl, random = ~1 + Age.Centered | PlayerID) 
+```
+
+Final model without squared terms
+```{r}
+modelFantasy_nooutl = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk + FantPos + Division + Age.Centered*FantPos + AgeKnot.Centered*FantPos, 
+                   data = fantasy_nooutl, 
+                   random = ~1 + Age.Centered | PlayerID) 
+
+summary(modelFantasy_nooutl)
+anova(modelFantasy1_nooutl, modelFantasy_nooutl)
+anova(modelFantasy_nooutl)
+```
+
+
+
+
+
+
+
+
+
+Creating running back only data
+
+```{r}
+fantasy_rb_nooutl <- fantasy_nooutl %>% filter(FantPos == "RB")
+```
+
+first model: only running backs, unadjusted
+
+```{r}
+model1_rb_nooutl <- lme(logPerformance ~ Age.Centered + Agesquared + AgeKnot.Centered + AgeKnotsquared,
+              data = fantasy_rb_nooutl,
+              random = ~1 + Age | PlayerID)
+summary(model1_rb_nooutl)
+```
+
+Model without squared terms and anova
+
+```{r}
+model2_rb_nooutl <- lme(logPerformance ~ Age.Centered + AgeKnot.Centered,
+              data = fantasy_rb_nooutl,
+              random = ~1 + Age.Centered | PlayerID)
+summary(model2_rb_nooutl)
+anova(model1_rb_nooutl, model2_rb_nooutl)
+```
+
+Second analysis, running backs only, adjuated model, no outliers
+
+```{r}
+modelFantasy1_rb_nooutl = lme(logPerformance ~ Age.Centered + Agesquared + AgeKnot.Centered + AgeKnotsquared + Rk + Division, 
+                    data = fantasy_rb_nooutl, 
+                    random = ~1 + Age.Centered | PlayerID) 
+summary(modelFantasy1_rb_nooutl)
+```
+
+Final model without squared terms
+
+```{r}
+modelFantasy_rb_nooutl = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk + Division, 
+                   data = fantasy_rb_nooutl, 
+                   random = ~1 + Age.Centered | PlayerID)
+summary(modelFantasy_rb_nooutl)
+anova(modelFantasy1_rb_nooutl, modelFantasy_rb_nooutl)
+anova(modelFantasy_rb_nooutl)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
