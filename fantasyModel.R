@@ -1,8 +1,10 @@
 library(nlme)
 library(dplyr)
 
+#read fantasy football data
 fantasy = read.csv("fantasyFootball.csv")
 
+#define variables to use in model
 fantasy$occassion = fantasy$Year - 2016
 
 fantasy$Agesquared <- (fantasy$Age.Centered)^2
@@ -26,7 +28,7 @@ model2 <- lme(logPerformance ~ Age.Centered + AgeKnot.Centered,
               method = "ML")
 summary(model2)
 
-anova(model1, model2)
+anova(model1, model2) #prefer model without squared age
 
 #second analysis: all players, adjusted model
 #change correlation structure -- need to change data frame to include "occasion"
@@ -77,14 +79,16 @@ fantasy_rb <- fantasy %>% filter(FantPos == "RB")
 #first model: only running backs, unadjusted
 model1_rb <- lme(logPerformance ~ Age.Centered + Agesquared + AgeKnot.Centered + AgeKnotsquared,
               data = fantasy_rb,
-              random = ~1 + Age | PlayerID)
+              random = ~1 + Age | PlayerID,
+              method = "ML")
 summary(model1_rb)
 
 
 #model without squared terms
 model2_rb <- lme(logPerformance ~ Age.Centered + AgeKnot.Centered,
               data = fantasy_rb,
-              random = ~1 + Age.Centered | PlayerID)
+              random = ~1 + Age.Centered | PlayerID,
+              method = "ML")
 summary(model2_rb)
 
 anova(model1_rb, model2_rb)
@@ -94,12 +98,14 @@ anova(model1_rb, model2_rb)
 #change correlation structure -- need to change data frame to include "occasion"
 modelFantasy1_rb = lme(logPerformance ~ Age.Centered + Agesquared + AgeKnot.Centered + AgeKnotsquared + Rk + Division, 
                     data = fantasy_rb, 
-                    random = ~1 + Age.Centered | PlayerID) 
+                    random = ~1 + Age.Centered | PlayerID,
+                    method = "ML") 
 
 #final model without squared terms
 modelFantasy_rb = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk + Division, 
                    data = fantasy_rb, 
-                   random = ~1 + Age.Centered | PlayerID) 
+                   random = ~1 + Age.Centered | PlayerID,
+                   method = "ML") 
 
 anova(modelFantasy1_rb, modelFantasy_rb)
 anova(modelFantasy_rb)
