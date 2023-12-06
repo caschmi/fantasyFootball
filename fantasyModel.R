@@ -44,14 +44,24 @@ modelFantasy = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk + FantP
                    method = "ML") 
 
 summary(modelFantasy)
+anova(modelFantasy)
 
 anova(modelFantasy1, modelFantasy)
 
+modelFantasy1 = lme(logPerformance ~ Age.Centered + Agesquared + AgeKnot.Centered + AgeKnotsquared + Rk + FantPos + Division + Age.Centered*FantPos + AgeKnot.Centered*FantPos, 
+                    data = fantasy, 
+                    random = ~1 + Age.Centered | PlayerID) 
+summary(modelFantasy1)
+anova(modelFantasy1)
 
 
+#final model for all positions
+modelFantasy_final = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk + FantPos + Division + Age.Centered*FantPos + AgeKnot.Centered*FantPos, 
+                   data = fantasy, 
+                   random = ~1 + Age.Centered | PlayerID) 
 
-summary(modelFantasy)
-anova(modelFantasy)
+summary(modelFantasy_final)
+anova(modelFantasy_final)
 
 
 # Data set creation of only individuals who have ages before and after 28
