@@ -120,7 +120,12 @@ modelFantasy_rb = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk + Di
 anova(modelFantasy1_rb, modelFantasy_rb)
 anova(modelFantasy_rb)
 
-
+#final model for only RBs
+modelFantasy_rbFinal = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk + Division, 
+                      data = fantasy_rb, 
+                      random = ~1 + Age.Centered | PlayerID)
+summary(modelFantasy_rbFinal)
+anova(modelFantasy_rbFinal)
 
 
 
