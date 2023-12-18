@@ -43,10 +43,10 @@ modelFantasy_final = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk +
                    random = ~1 + Age.Centered | PlayerID)
 
 png("QQplotALL.png")
-qqnorm(mResAll)
+#qqnorm(mResAll)
 
 dev.off()
-qqPlot(mResAll)
+#qqPlot(mResAll)
 
 # RB only
 fantasy_rb <- fantasy %>% filter(FantPos == "RB")
@@ -60,7 +60,7 @@ mResRB = modelFantasy_rbFinal$residuals
 
 png("QQplots.png")
 par(mfrow = c(1,2))
-car::qqPlot(mResAll, ylab = "Sample Quantiles (All positions)")
+#car::qqPlot(mResAll, ylab = "Sample Quantiles (All positions)")
 car::qqPlot(mResRB, ylab = "Sample Quantiles (Running backs)")
 dev.off()
 
@@ -94,15 +94,33 @@ modelVIFall = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk + FantPo
 VIFall = vif(modelVIFall)
 vif(modelVIFall)
 kable(VIFall)
-
 ```
 
 # Cholesky demcomposition for transformed residuals
 Need to extract the estimated variance covariance matrix of the residuals
 ```{r}
-
-
+library(Matrix)
+mat <-vcov(summary(modelFantasy_final))
+Linv <- solve(chol(mat))
+res <- modelFantasy_final$residuals
+rstar <- Linv %*% res
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
