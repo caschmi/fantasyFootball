@@ -98,14 +98,41 @@ kable(VIFall)
 
 # Cholesky demcomposition for transformed residuals
 Need to extract the estimated variance covariance matrix of the residuals
+doing the thing for all players:
 ```{r}
+#this takes a long time to run dont do it twice
 library(Matrix)
-mat <-vcov(summary(modelFantasy_final))
-Linv <- solve(chol(mat))
-res <- modelFantasy_final$residuals
+library(stats)
+mat <-diag(rep(sigma(modelFantasy_final)^2,nobs(modelFantasy_final)))
+Linv <- t(solve(chol(mat)))
+res <- residuals(modelFantasy_final)
 rstar <- Linv %*% res
+qqPlot(rstar)
+mahalanobis_dist <- t(rstar) %*% rstar
+hist(res, breaks = 20, freq=T, ylim=c(0,1000))
+hist(rstar, breaks = 20, freq=T, ylim=c(0,1000))
+mahalanobis_dist
+```
+Doing the thing for only running backs
+```{r}
+mat <-diag(rep(sigma(modelFantasy_rb)^2,nobs(modelFantasy_rb)))
+Linv <- t(solve(chol(mat)))
+res <- residuals(modelFantasy_rb)
+rstar1 <- Linv %*% res
+qqPlot(rstar)
+mahalanobis_dist <- t(rstar) %*% rstar
+hist(res, breaks = 20, freq=T, ylim=c(0,1000))
+hist(rstar, breaks = 20, freq=T, ylim=c(0,1000))
+mahalanobis_dist
 ```
 
+```{r}
+png("QQplots1.png")
+par(mfrow = c(1,2))
+car::qqPlot(rstar, ylab = "Transformed Residuals (All positions)")
+car::qqPlot(rstar1, ylab = "Transformed Residuals (Running backs)")
+dev.off()
+```
 
 
 
