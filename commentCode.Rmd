@@ -42,11 +42,10 @@ modelFantasy_final = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk +
                    data = fantasy, 
                    random = ~1 + Age.Centered | PlayerID)
 
-png("QQplotALL.png")
-#qqnorm(mResAll)
+#png("QQplotALL.png")
 
-dev.off()
-#qqPlot(mResAll)
+qqPlot(modelFantasy_final$residuals)
+#dev.off()
 
 # RB only
 fantasy_rb <- fantasy %>% filter(FantPos == "RB")
@@ -54,15 +53,13 @@ modelFantasy_rbFinal = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk
                       data = fantasy_rb, 
                       random = ~1 + Age.Centered | PlayerID)
 
-summary(modelFantasy_rbFinal)
+qqPlot(modelFantasy_rbFinal$residuals)
 
-mResRB = modelFantasy_rbFinal$residuals
-
-png("QQplots.png")
-par(mfrow = c(1,2))
-#car::qqPlot(mResAll, ylab = "Sample Quantiles (All positions)")
-car::qqPlot(mResRB, ylab = "Sample Quantiles (Running backs)")
-dev.off()
+#png("QQplots.png")
+#par(mfrow = c(1,2))
+#qqPlot(modelFantasy_final$residuals)
+#qqPlot(modelFantasy_rbFinal$residuals)
+#dev.off()
 
 # Outliers 
 fantasy_nooutl <- fantasy[-boxB(fantasy$Performance)$outliers,]
@@ -71,8 +68,8 @@ modelFantasy_nooutl = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk 
                    data = fantasy_nooutl, 
                    random = ~1 + Age.Centered | PlayerID) 
 
-mResAll_noOutl = modelFantasy_nooutl$residuals
-car::qqPlot(mResAll_noOutl)
+
+qqPlot(modelFantasy_nooutl$residuals)
 
 # Outlier RB
 fantasy_rb_nooutl <- fantasy_nooutl %>% filter(FantPos == "RB")
@@ -81,8 +78,7 @@ modelFantasy_rb_nooutl = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + 
                    data = fantasy_rb_nooutl, 
                    random = ~1 + Age.Centered | PlayerID)
 
-mResRB_noOutl = modelFantasy_rb_nooutl$residuals
-car::qqPlot(mResRB_noOutl)
+car::qqPlot(modelFantasy_rb_nooutl$residuals)
 ```
 
 ## Mutlicolinearity 
