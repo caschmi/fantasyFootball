@@ -35,13 +35,13 @@ anova(model1, model2) #prefer model without squared age
 
 #second analysis: all players, adjusted model
 #change correlation structure -- need to change data frame to include "occasion"
-modelFantasy1 = lme(logPerformance ~ Age.Centered + Agesquared + AgeKnot.Centered + AgeKnotsquared + Rk + FantPos + Division + Age.Centered*FantPos + AgeKnot.Centered*FantPos, 
+modelFantasy1 = lme(logPerformance ~ Age.Centered + Agesquared + AgeKnot.Centered + AgeKnotsquared + Rk + FantPos + Division + careerLength + Age.Centered*FantPos + AgeKnot.Centered*FantPos, 
                     data = fantasy, 
                     random = ~1 + Age.Centered | PlayerID,
                     method = "ML") 
 
 #final model without squared terms
-modelFantasy = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk + FantPos + Division + Age.Centered*FantPos + AgeKnot.Centered*FantPos, 
+modelFantasy = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk + FantPos + Division + careerLength + Age.Centered*FantPos + AgeKnot.Centered*FantPos, 
                    data = fantasy, 
                    random = ~1 + Age.Centered | PlayerID,
                    method = "ML") 
@@ -49,7 +49,7 @@ modelFantasy = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk + FantP
 summary(modelFantasy)
 anova(modelFantasy)
 
-anova(modelFantasy1, modelFantasy)
+anova(modelFantasy1, modelFantasy) #modelFantasy (without squared terms) has better fit
 
 modelFantasy1 = lme(logPerformance ~ Age.Centered + Agesquared + AgeKnot.Centered + AgeKnotsquared + Rk + FantPos + Division + Age.Centered*FantPos + AgeKnot.Centered*FantPos, 
                     data = fantasy, 
@@ -59,7 +59,7 @@ anova(modelFantasy1)
 
 
 #final model for all positions
-modelFantasy_final = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk + FantPos + Division + Age.Centered*FantPos + AgeKnot.Centered*FantPos, 
+modelFantasy_final = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk + FantPos + Division + careerLength + Age.Centered*FantPos + AgeKnot.Centered*FantPos, 
                    data = fantasy, 
                    random = ~1 + Age.Centered | PlayerID) 
 
@@ -109,22 +109,22 @@ anova(model1_rb, model2_rb)
 
 #second analysis: only running backs, adjusted model
 #change correlation structure -- need to change data frame to include "occasion"
-modelFantasy1_rb = lme(logPerformance ~ Age.Centered + Agesquared + AgeKnot.Centered + AgeKnotsquared + Rk + Division, 
+modelFantasy1_rb = lme(logPerformance ~ Age.Centered + Agesquared + AgeKnot.Centered + AgeKnotsquared + Rk + Division + careerLength, 
                     data = fantasy_rb, 
                     random = ~1 + Age.Centered | PlayerID,
                     method = "ML") 
 
 #final model without squared terms
-modelFantasy_rb = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk + Division, 
+modelFantasy_rb = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk + Division + careerLength, 
                    data = fantasy_rb, 
                    random = ~1 + Age.Centered | PlayerID,
                    method = "ML") 
 
-anova(modelFantasy1_rb, modelFantasy_rb)
+anova(modelFantasy1_rb, modelFantasy_rb) #prefer with no squared terms
 anova(modelFantasy_rb)
 
 #final model for only RBs
-modelFantasy_rbFinal = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk + Division, 
+modelFantasy_rbFinal = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk + Division + careerLength, 
                       data = fantasy_rb, 
                       random = ~1 + Age.Centered | PlayerID)
 summary(modelFantasy_rbFinal)
