@@ -10,6 +10,9 @@ fantasy$occassion = fantasy$Year - 2016
 fantasy$Agesquared <- (fantasy$Age.Centered)^2
 fantasy$AgeKnotsquared <- (fantasy$AgeKnot.Centered)^2
 fantasy$logPerformance <- log(fantasy$Performance + 5.3)
+fantasy <- fantasy %>% group_by(Player) %>% 
+  mutate(maxAge = max(Age), minAge = min(Age)) %>% 
+  mutate(careerLength = maxAge - minAge) %>% ungroup()
 
 #models for first scientific question: ----
 #Does the trajectory of a player’s performance change after age 28?
