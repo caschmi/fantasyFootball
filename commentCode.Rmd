@@ -1,0 +1,108 @@
+---
+title: "Addressing Maria's Comments"
+author: "Casey Schmidt"
+date: "2023-12-17"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(tidyr)
+library(gtsummary)
+library(nlme)
+library(car)
+library(ggplot2)
+library(knitr)
+library(univOutl)
+library(Matrix)
+```
+
+# Creating table 1 
+```{r}
+fantasy = read.csv("fantasyFootball.csv")
+
+fantasy %>%
+  select(Age, FantPos, Division) %>%
+  tbl_summary()
+```
+
+# Diagnostics 
+## Normality of the residuals
+
+```{r}
+fantasy$Agesquared <- (fantasy$Age.Centered)^2
+fantasy$AgeKnotsquared <- (fantasy$AgeKnot.Centered)^2
+fantasy$logPerformance <- log(fantasy$Performance + 5.3)
+
+# With position
+modelFantasy_final = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk + FantPos + Division + Age.Centered*FantPos + AgeKnot.Centered*FantPos, 
+                   data = fantasy, 
+                   random = ~1 + Age.Centered | PlayerID)
+
+png("QQplotALL.png")
+qqnorm(mResAll)
+
+dev.off()
+qqPlot(mResAll)
+
+# RB only
+fantasy_rb <- fantasy %>% filter(FantPos == "RB")
+modelFantasy_rbFinal = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk + Division, 
+                      data = fantasy_rb, 
+                      random = ~1 + Age.Centered | PlayerID)
+
+summary(modelFantasy_rbFinal)
+
+mResRB = modelFantasy_rbFinal$residuals
+
+png("QQplots.png")
+par(mfrow = c(1,2))
+car::qqPlot(mResAll, ylab = "Sample Quantiles (All positions)")
+car::qqPlot(mResRB, ylab = "Sample Quantiles (Running backs)")
+dev.off()
+
+# Outliers 
+fantasy_nooutl <- fantasy[-boxB(fantasy$Performance)$outliers,]
+
+modelFantasy_nooutl = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk + FantPos + Division + Age.Centered*FantPos + AgeKnot.Centered*FantPos, 
+                   data = fantasy_nooutl, 
+                   random = ~1 + Age.Centered | PlayerID) 
+
+mResAll_noOutl = modelFantasy_nooutl$residuals
+car::qqPlot(mResAll_noOutl)
+
+# Outlier RB
+fantasy_rb_nooutl <- fantasy_nooutl %>% filter(FantPos == "RB")
+
+modelFantasy_rb_nooutl = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk + Division, 
+                   data = fantasy_rb_nooutl, 
+                   random = ~1 + Age.Centered | PlayerID)
+
+mResRB_noOutl = modelFantasy_rb_nooutl$residuals
+car::qqPlot(mResRB_noOutl)
+```
+
+## Mutlicolinearity 
+
+```{r}
+modelVIFall = lme(logPerformance ~ Age.Centered + AgeKnot.Centered + Rk + FantPos + Division, 
+                   data = fantasy, 
+                   random = ~1 + Age.Centered | PlayerID) 
+VIFall = vif(modelVIFall)
+vif(modelVIFall)
+kable(VIFall)
+
+```
+
+# Cholesky demcomposition for transformed residuals
+Need to extract the estimated variance covariance matrix of the residuals
+```{r}
+
+
+```
+
+
+
