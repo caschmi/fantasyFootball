@@ -1,5 +1,7 @@
 library(nlme)
 library(dplyr)
+library(tableone)
+library(kableExtra)
 
 #read fantasy football data
 fantasy = read.csv("fantasyFootball.csv")
@@ -13,6 +15,8 @@ fantasy$logPerformance <- log(fantasy$Performance + 5.3)
 fantasy <- fantasy %>% group_by(Player) %>% 
   mutate(maxAge = max(Age), minAge = min(Age)) %>% 
   mutate(careerLength = maxAge - minAge) %>% ungroup()
+
+kableone(CreateTableOne(data = fantasy, vars = c("Age", "careerLength", "FantPos", "Division")))
 
 #models for first scientific question: ----
 #Does the trajectory of a player’s performance change after age 28?

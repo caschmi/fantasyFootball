@@ -1,0 +1,32 @@
+---
+title: "tableone"
+author: "Caitlin Seibel"
+date: "2023-12-18"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(nlme)
+library(dplyr)
+library(tableone)
+library(kableExtra)
+```
+
+```{r}
+#read fantasy football data
+fantasy = read.csv("fantasyFootball.csv")
+
+#define variables to use in model
+fantasy$occassion = fantasy$Year - 2016
+
+fantasy$Agesquared <- (fantasy$Age.Centered)^2
+fantasy$AgeKnotsquared <- (fantasy$AgeKnot.Centered)^2
+fantasy$logPerformance <- log(fantasy$Performance + 5.3)
+fantasy <- fantasy %>% group_by(Player) %>% 
+  mutate(maxAge = max(Age), minAge = min(Age)) %>% 
+  mutate(careerLength = maxAge - minAge) %>% ungroup()
+
+kableone(CreateTableOne(data = fantasy, vars = c("Age", "careerLength", "FantPos", "Division")), booktabs = T) %>% add_indent(positions = c(5:8, 10:18))
+```
+
